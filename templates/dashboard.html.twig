@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="{{ path('index') }}css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <title>Dashboard - {% block title %}{% endblock %}</title>
+</head>
+
+<body>
+
+<div class="dashboard">
+    <div class="sideMenu">
+        <div class="sideMenuContent">
+            <h2><a href="{{ path('index') }}">Favlocker</a></h2>
+            <h3><i class="far fa-star"></i> My Favorites</h3>
+            <ul>
+                <li><i class="fas fa-angle-right"></i> <a href="#">Sort by name</a></li>
+                <li><i class="fas fa-angle-right"></i> <a href="#">Sort by category</a>
+                </li>
+            </ul>
+            <h3><i class="fas fa-filter"></i> Filter</h3>
+            <ul>
+
+                <li><i class="fas fa-angle-right"></i> <a href="#">Category</a></li>
+
+            </ul>
+
+            <h3><i class="fas fa-user-edit"></i>Profile</h3>
+            <ul>
+                <li><i class="fas fa-angle-right"></i> <a href="#">Modifier mon nom</a></li>
+                <li><i class="fas fa-angle-right"></i> <a href="#">Modifier mon e-mail</a></li>
+                <li><i class="fas fa-angle-right"></i> <a href="#">Modifier mon mot de passe</a></li>
+            </ul>
+            <a class="logout" href="#">Log out</a>
+        </div>
+    </div>
+
+
+    {% block content %}{% endblock %}
+</div>
+</body>
+
+</html>
