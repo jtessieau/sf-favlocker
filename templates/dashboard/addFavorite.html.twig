@@ -1,0 +1,17 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    <h1>Add Favorite</h1>
+    {{ form_start(addFavoriteForm) }}
+        {{ form_row(addFavoriteForm.name) }}
+        {{ form_row(addFavoriteForm.url) }}
+        {{ form_row(addFavoriteForm.category) }}
+    <button type="submit" class="btn">Add</button>
+
+    {{ form_end(addFavoriteForm) }}
+{% endblock %}
+

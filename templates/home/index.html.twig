@@ -5,7 +5,10 @@
 {% block body %}
     <h1>Welcome to Fav Locker !</h1>
 
-    <a href="{{ path('index') }}">Back to home</a>
-    <a href="{{ path('dashboard') }}">Dashboard</a>
+    <ul>
+        <li><a href="{{ path('index') }}">Back to home</a></li>
+        <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ path('app_login') }}">Login</a></li>
+    </ul>
 
 {% endblock %}

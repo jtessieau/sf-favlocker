@@ -35,12 +35,13 @@
                 <li><i class="fas fa-angle-right"></i> <a href="#">Modifier mon e-mail</a></li>
                 <li><i class="fas fa-angle-right"></i> <a href="#">Modifier mon mot de passe</a></li>
             </ul>
-            <a class="logout" href="#">Log out</a>
+            <a class="logout" href="{{ path('app_logout') }}">Log out</a>
         </div>
     </div>
 
-
+<div class="content">
     {% block content %}{% endblock %}
+</div>
 </div>
 </body>
 
