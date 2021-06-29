@@ -23,11 +23,11 @@
                 </li>
             </ul>
             <h3><i class="fas fa-filter"></i> Filter</h3>
-            <ul>
-
-                <li><i class="fas fa-angle-right"></i> <a href="#">Category</a></li>
-
-            </ul>
+                <ul>
+                    {% for category in categories %}
+                        <li><i class="fas fa-angle-right"></i> <a href="#">{{ category.name|capitalize }}</a></li>
+                    {% endfor %}
+                </ul>
 
             <h3><i class="fas fa-user-edit"></i>Profile</h3>
             <ul>
@@ -40,6 +40,7 @@
     </div>
 
 <div class="content">
+
     {% block content %}{% endblock %}
 </div>
 </div>

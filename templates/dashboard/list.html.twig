@@ -1,0 +1,14 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    <ul>
+    {% for favorite in favorites %}
+        <li>{{ favorite.url }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -7,10 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
-use Symfony\Component\Validator\Constraints\UrlValidator;
-use Symfony\Component\Validator\Constraints\Valid;
 
 class AddFavoriteType extends AbstractType
 {
@@ -24,7 +21,7 @@ class AddFavoriteType extends AbstractType
                     ])
             ])
             ->add('name')
-            ->add('category')
+            ->add('category',CategoryType::class)
         ;
     }
 
