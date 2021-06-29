@@ -15,17 +15,25 @@
 <div class="dashboard">
     <div class="sideMenu">
         <div class="sideMenuContent">
-            <h2><a href="{{ path('index') }}">Favlocker</a></h2>
+            <h2><a href="{{ path('dashboard_index') }}">Favlocker</a></h2>
             <h3><i class="far fa-star"></i> My Favorites</h3>
             <ul>
-                <li><i class="fas fa-angle-right"></i> <a href="#">Sort by name</a></li>
-                <li><i class="fas fa-angle-right"></i> <a href="#">Sort by category</a>
+                <li>
+                    <i class="fas fa-angle-right"></i>
+                    <a href="{{ path('dashboard_list_favorites_by',{sort: 'name'}) }}">Sort by name</a>
+                </li>
+                <li>
+                    <i class="fas fa-angle-right"></i>
+                    <a href="{{ path('dashboard_list_favorites_by',{sort:'category'}) }}">Sort by category</a>
                 </li>
             </ul>
             <h3><i class="fas fa-filter"></i> Filter</h3>
                 <ul>
                     {% for category in categories %}
-                        <li><i class="fas fa-angle-right"></i> <a href="#">{{ category.name|capitalize }}</a></li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a href="{{ path('dashboard_category',{category:category}) }}">{{ category|capitalize }}</a>
+                            </li>
                     {% endfor %}
                 </ul>
 

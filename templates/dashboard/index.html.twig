@@ -5,11 +5,11 @@
 {% block content %}
 
 <div class="content">
-    <h1>Hello {{ username }}! ✅</h1>
+    <h1>Hello {{ username|capitalize }}! ✅</h1>
 
     <ul>
-        <li><a href="{{ path('listFavorite') }}">List</a></li>
-        <li><a href="{{ path('addFavorite') }}">Add</a></li>
+        <li><a href="{{ path('dashboard_list_favorites') }}">List</a></li>
+        <li><a href="{{ path('dashboard_add_favorite') }}">Add</a></li>
     </ul>
 </div>
 {% endblock %}

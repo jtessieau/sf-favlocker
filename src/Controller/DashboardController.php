@@ -6,24 +6,27 @@ use App\Entity\Favorite;
 use App\Form\AddFavoriteType;
 use App\Repository\FavoriteRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/dashboard',name: 'dashboard_')]
 class DashboardController extends AbstractController
 {
 
-    #[Route('/dashboard', name: 'dashboard')]
+    #[Route('/', name: 'index')]
     public function index(): Response
     {
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
             'username' => $this->getUser()->getUsername(),
+            'categories' => $this->getCategories()
         ]);
     }
 
-    #[Route('/dashboard/add', name: 'addFavorite')]
+    #[Route('/add', name: 'add_favorite')]
     public function addFavorite(Request $request): Response
     {
         $favorite = new Favorite();
@@ -44,15 +47,15 @@ class DashboardController extends AbstractController
             $em->persist($favorite);
             $em->flush();
 
-            return $this->redirectToRoute('dashboard');
+            return $this->redirectToRoute('dashboard_index');
         }
 
         return $this->render('dashboard/addFavorite.html.twig',[
             'addFavoriteForm'=>$form->createView(),
-            'categories' => $this->getFavorites()
+            'categories' => $this->getCategories()
         ]);
     }
-    #[Route('/dashboard/list', name: 'listFavorite')]
+    #[Route('/list', name: 'list_favorites')]
     public function listFavorites(FavoriteRepository $favoriteRepository): Response
     {
         $favorites = $favoriteRepository->findBy(['user'=>$this->getUser()]);
@@ -62,28 +65,70 @@ class DashboardController extends AbstractController
         ]);
     }
 
-    private function getFavorites(): array
+    #[Route('/list-by/{sort}', name: 'list_favorites_by')]
+    public function sort(string $sort):Response
     {
-        $favoriteRepository = $this->getDoctrine()->getRepository('App:Favorite');
-        $userRepository = $this->getDoctrine()->getRepository('App:User');
-        if (!empty($this->getUser())) {
-            $user = $userRepository->findOneBy(['email'=> $this->getUser()->getUserIdentifier()]);
-            return $favoriteRepository->findBy(['user' => $user->getId()]);
+        $user = $this->getUser();
+        if($sort==='category'){
+            $favorites = $this->getDoctrine()
+                ->getRepository('App:Favorite')
+                ->findAllSortByCategory($user);
         } else {
-            return [];
+            $favorites = $this->getDoctrine()
+                ->getRepository('App:Favorite')
+                ->findAllSortByName($user);
         }
+
+        return $this->render('dashboard/list.html.twig',[
+            'favorites'=>$favorites,
+            'categories'=>$this->getCategories()
+        ]);
     }
+    #[Route('/category/{category}', name:'category')]
+    public function listByCategory(string $category): Response
+    {
+        $category = $this->getDoctrine()
+            ->getRepository('App:Category')
+            ->findOneBy(['name'=>$category]);
+        $favorites = $this->getDoctrine()
+            ->getRepository('App:Favorite')
+            ->findBy([
+                'category'=>$category,
+                'user'=>$this->getUser()
+            ],
+                ['name'=> 'Asc']
+            );
+
+        return $this->render('dashboard/list.html.twig',[
+            'favorites'=>$favorites,
+            'categories'=>$this->getCategories()
+        ]);
+    }
+
+    #[Route('/delete/{id}', name: 'delete_favorite')]
+    public function deleteFavorite(Favorite $favorite, EntityManagerInterface $entityManager):?Response
+    {
+        $entityManager->remove($favorite);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('dashboard_index');
+    }
+
     private function getCategories(): array
     {
+        $user = $this->getUser();
+        $favorites = $this->getDoctrine()
+            ->getRepository('App:Favorite')
+            ->findAllSortByCategory($user);
         $categories = array();
-        if(!empty($this->getFavorites())) {
-            foreach ($this->getFavorites() as $favorite) {
+
+        if(!empty($favorites)) {
+            foreach ($favorites as $favorite) {
                 if (!in_array($favorite->getCategory(),$categories)) {
-                    $categories[] = $favorite->getCategory();
+                    $categories[] = $favorite->getCategory()->getName();
                 }
             }
         }
-        sort($categories);
         return $categories;
     }
 }

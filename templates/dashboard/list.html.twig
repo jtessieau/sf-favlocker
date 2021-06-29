@@ -5,9 +5,10 @@
 {% endblock %}
 
 {% block content %}
+    name | url | category <br>
     <ul>
     {% for favorite in favorites %}
-        <li>{{ favorite.url }}</li>
+        <li>{{ favorite.id }} | {{ favorite.name }} | {{ favorite.url }} | {{ favorite.category.name }}</li>
     {% endfor %}
     </ul>
 

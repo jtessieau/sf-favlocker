@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Favorite;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use function Symfony\Component\VarDumper\Dumper\esc;
 
 /**
  * @method Favorite|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,19 +24,31 @@ class FavoriteRepository extends ServiceEntityRepository
     // /**
     //  * @return Favorite[] Returns an array of Favorite objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findAllSortByName(User $user)
     {
+
         return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('f.user = :val')
+            ->setParameter('val', $user)
+            ->orderBy('f.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }  public function findAllSortByCategory(User $user)
+    {
+
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.user = :val')
+            ->setParameter('val', $user)
+            ->join('f.category','category')
+            ->orderBy('category.name', 'ASC')
+            ->addOrderBy('f.name','ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Favorite
