@@ -9,6 +9,8 @@
     <ul>
     {% for favorite in favorites %}
         <li>{{ favorite.id }} | {{ favorite.name }} | {{ favorite.url }} | {{ favorite.category.name }}</li>
+        <a href="{{ path('dashboard_delete_favorite',{id:favorite.id}) }}">delete</a>
+        <a href="{{ path('dashboard_edit_favorite',{id:favorite.id}) }}">modify</a>
     {% endfor %}
     </ul>
 

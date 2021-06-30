@@ -106,12 +106,46 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete_favorite')]
-    public function deleteFavorite(Favorite $favorite, EntityManagerInterface $entityManager):?Response
+    public function deleteFavorite(Favorite $favorite, EntityManagerInterface $entityManager,Request $request):?Response
     {
-        $entityManager->remove($favorite);
-        $entityManager->flush();
+        if ($favorite->getUser()->getEmail() === $this->getUser()->getUserIdentifier()) {
+            $entityManager->remove($favorite);
+            $entityManager->flush();
+        } else {
+            throw $this->createNotFoundException(
+                'This favorite does not exist'
+            );
+        }
 
-        return $this->redirectToRoute('dashboard_index');
+        return $this->redirect($this->previousUrl($request));
+
+    }
+
+    #[Route('/edit/{id}',name: 'edit_favorite')]
+    public function editFavorite(Favorite $favorite, Request $request):Response
+    {
+        $form = $this->createForm(AddFavoriteType::class, $favorite);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $favorite->getCategory()->setName(strtolower($favorite->getCategory()->getName()));
+            $category = $this->getDoctrine()
+                ->getRepository('App:Category')
+                ->findOneBy(['name' => $favorite->getCategory()->getName()]);
+            if($category) {
+                $favorite->setCategory($category);
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            return $this->redirectToRoute('dashboard_list_favorites');
+        }
+
+        return $this->render('dashboard/addFavorite.html.twig',[
+            'addFavoriteForm'=>$form->createView(),
+            'categories' => $this->getCategories()
+        ]);
     }
 
     private function getCategories(): array
@@ -130,5 +164,16 @@ class DashboardController extends AbstractController
             }
         }
         return $categories;
+    }
+
+    private function previousUrl($request):string
+    {
+        $referer = $request->headers->get('referer');
+        if ($referer == NULL) {
+            $url = $this->generateUrl('dashboard_index');
+        } else {
+            $url = $referer;
+        }
+        return $url;
     }
 }
